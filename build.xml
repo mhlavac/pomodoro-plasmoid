@@ -1,0 +1,34 @@
+<project>
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+    <property name="code" value="./contents/code" />
+
+    <target name="clean">
+        <delete>
+            <fileset dir="${code}" includes="**/*.js" />
+        </delete>
+    </target>
+
+    <target name="convert-coffee-script">
+        <apply executable="coffee">
+            <arg value="-c" />
+            <arg value="-o" />
+            <targetfile />
+            <srcfile />
+            
+            <fileset dir="${code}" includes="**/*.coffee" />
+            <mapper type="glob" from="*.coffee" to="*.js" />
+        </apply>
+    </target>
+
+    <target name="google-closure">
+    </target>
+
+    <target name="build">
+    </target>
+
+    <target name="test">
+    </target>
+
+    <target name="run">
+    </target>
+</project>
