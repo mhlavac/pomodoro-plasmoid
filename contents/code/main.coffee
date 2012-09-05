@@ -1,16 +1,21 @@
-configChanged = () ->
-    
+goog.provide 'mhlavac.pomodoro'
 
-workLength = plasmoid.readConfig('work_length')
+goog.require 'mhlavac.pomodoro.PomodoroView'
+goog.require 'mhlavac.pomodoro.Notification'
 
-plasmoid.include('notification.js')
-plasmoid.include('PomodoroView.js')
+layout = new LinearLayout plasmoid
+label = new Label
+label.text = "test"
+layout.addItem label
 
-print test
-
-plasmoid.readConfig('short_break')
-plasmoid.readConfig('long_break')
-plasmoid.configChanged = configChanged
+#configChanged = () ->
+#    
+#
+#workLength = plasmoid.readConfig('work_length')
+#
+#plasmoid.readConfig('short_break')
+#plasmoid.readConfig('long_break')
+#plasmoid.configChanged = configChanged
 
 #stopTimer();
 #button.clicked.connect(Pomodoro.start());

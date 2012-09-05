@@ -1,34 +1,42 @@
-<project>
-    <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+<project name="MHlavacPomodoroPlasmoid" default="build">
+    <description>
+        Build script for MHlavac Pomodoro Plasmoid :-) 
+    </description>
     <property name="code" value="./contents/code" />
 
     <target name="clean">
+        <echo message="Removing generated javascript files" />
         <delete>
             <fileset dir="${code}" includes="**/*.js" />
         </delete>
     </target>
 
     <target name="convert-coffee-script">
-        <apply executable="coffee">
-            <arg value="-c" />
-            <arg value="-o" />
-            <targetfile />
-            <srcfile />
-            
-            <fileset dir="${code}" includes="**/*.coffee" />
-            <mapper type="glob" from="*.coffee" to="*.js" />
-        </apply>
+        <echo message="Converting from coffeescript to javascript" />
+        <parallel threadCount="8">
+	        <apply executable="coffee" dir="${code}" verbose="yes">
+	            <arg value="-c" />
+	            <arg value="-b" />
+	            <srcfile />
+	            
+	            <fileset dir="." includes="**/*.coffee" />
+	        </apply>
+        </parallel>
     </target>
 
     <target name="google-closure">
+        <echo message="Compiling javascript with google closure" />
+        <exec executable="google-closure-library/closure/bin/build/closurebuilder.py">
+            <arg value="--root=${code}" />
+            <arg value="--root=google-closure-library" />
+            <arg value="--output_mode=compiled" />
+            <arg value="--compiler_jar=bin/compiler.jar" />
+            <arg value="--namespace=mhlavac.pomodoro" />
+            <arg value="--output_file=${code}/compiled.js" />
+        </exec>
     </target>
-
-    <target name="build">
-    </target>
-
-    <target name="test">
-    </target>
-
-    <target name="run">
+    
+    <target name="build" depends="convert-coffee-script,google-closure">
+        <echo message="Building javascript plasmoid" />
     </target>
 </project>
