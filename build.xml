@@ -1,8 +1,11 @@
-<project name="MHlavacPomodoroPlasmoid" default="build">
+<project name="mhlavacPomodoroPlasmoid" default="build">
     <description>
-        Build script for MHlavac Pomodoro Plasmoid :-) 
+        Build script for mhlavac Pomodoro Plasmoid :-) 
     </description>
-    <property name="code" value="./contents/code" />
+    <property name="root_path" value="." />
+    <property name="code" value="${root_path}/contents/code" />
+    <property name="closure_builder" value="${root_path}/google-closure-library/closure/bin/build/closurebuilder.py" />
+    <property name="closure_compiler" value="${root_path}/bin/compiler.jar" />
 
     <target name="clean">
         <echo message="Removing generated javascript files" />
@@ -14,28 +17,28 @@
     <target name="convert-coffee-script">
         <echo message="Converting from coffeescript to javascript" />
         <parallel threadCount="8">
-	        <apply executable="coffee" dir="${code}" verbose="yes">
-	            <arg value="-c" />
-	            <arg value="-b" />
-	            <srcfile />
-	            
-	            <fileset dir="." includes="**/*.coffee" />
-	        </apply>
+            <apply executable="coffee" dir="${code}" verbose="yes">
+                <arg value="-c" />
+                <arg value="-b" />
+                <srcfile />
+                
+                <fileset dir="." includes="**/*.coffee" />
+            </apply>
         </parallel>
     </target>
 
     <target name="google-closure">
         <echo message="Compiling javascript with google closure" />
-        <exec executable="google-closure-library/closure/bin/build/closurebuilder.py">
+        <exec executable="${closure_builder}">
             <arg value="--root=${code}" />
-            <arg value="--root=google-closure-library" />
+            <arg value="--root=${root_path}/google-closure-library" />
             <arg value="--output_mode=compiled" />
-            <arg value="--compiler_jar=bin/compiler.jar" />
             <arg value="--namespace=mhlavac.pomodoro" />
+            <arg value="--compiler_jar=${closure_compiler}" />
             <arg value="--output_file=${code}/compiled.js" />
         </exec>
     </target>
-    
+
     <target name="build" depends="convert-coffee-script,google-closure">
         <echo message="Building javascript plasmoid" />
     </target>
