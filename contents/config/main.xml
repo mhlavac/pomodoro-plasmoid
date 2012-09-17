@@ -17,5 +17,9 @@
             <whatsthis>Long break length</whatsthis>
             <default>15</default>
         </entry>
+        <entry name="timetable" type="String">
+            <whatsthis>Timetable</whatsthis>
+            <default>wswswswlwswswswl</default>
+        </entry>
     </group>
 </kcfg>
