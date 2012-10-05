@@ -1,6 +1,6 @@
 <project name="mhlavacPomodoroPlasmoid" default="build">
     <description>
-        Build script for mhlavac Pomodoro Plasmoid :-) 
+        Build script for mhlavac Pomodoro Plasmoid :-)
     </description>
     <property name="root_path" value="." />
     <property name="code" value="${root_path}/contents/code" />
@@ -21,7 +21,7 @@
                 <arg value="-c" />
                 <arg value="-b" />
                 <srcfile />
-                
+
                 <fileset dir="." includes="**/*.coffee" />
             </apply>
         </parallel>
@@ -36,6 +36,19 @@
             <arg value="--namespace=mhlavac.pomodoro" />
             <arg value="--compiler_jar=${closure_compiler}" />
             <arg value="--output_file=${code}/compiled.js" />
+        </exec>
+    </target>
+
+    <target name="build-package">
+        <echo message="Packaging pomodoro application..." level="info" />
+        <exec executable="zip">
+            <arg value="-r" />
+            <arg value="./build/pomodoro.plasmoid" />
+            <arg value="contents" />
+            <arg value="doc" />
+            <arg value="LICENCE" />
+            <arg value="README.md" />
+            <arg value="metadata.desktop" />
         </exec>
     </target>
 

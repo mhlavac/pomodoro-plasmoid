@@ -1,7 +1,7 @@
 Pomodoro Plasmoid for KDE
-=================
+=========================
 
-Work in progress... currently you can only build the application. My goal is to create Pomodoro plasmoid completely in coffeescript.
+Work in progress... You can install application via install.sh script. This plasmoid is build completely in coffeescript.
 
 Currently the build process is finished... you can test it yourself with ant command:
 
@@ -9,7 +9,17 @@ Currently the build process is finished... you can test it yourself with ant com
 ant build
 ```
 
-## Licence
+Using mhlavac-pomodoro
+----------------------
+
+Simply download `pomodoro.plasmoid` from build/pomodoro.plasmoid and then use following command
+
+``` sh
+plasmapkg -i pomodoro.plasmoid
+```
+
+Licence
+-------
 
 Project is under MIT licence. For more information see file:
 

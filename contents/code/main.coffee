@@ -1,5 +1,5 @@
 goog.provide 'mhlavac.pomodoro'
-goog.require 'mhlavac.pomodoro.Notification'
+goog.require 'mhlavac.plasmoid.Notification'
 goog.require 'mhlavac.pomodoro.Configuration'
 
 configuration = new mhlavac.pomodoro.Configuration(plasmoid)
@@ -59,9 +59,11 @@ button.clicked.connect =>
             if nowTime.getTime() >= endTime
                 if @pomodoro
                     @totalPomodoros++
+                    mhlavac.plasmoid.Notification "Pomodoro ended, stop working!", "Pomodoro has ended after #{config.work_length / 1000} seconds.\nIt's your #{totalPomodoros} pomodoro today!"
+                else
+                    mhlavac.plasmoid.Notification "Break ended, start working!", "Your break has ended... start working on another pomodoro!"
                 @pomodoro = !@pomodoro
                 @button.clicked()
-                mhlavac.pomodoro.Notification "pomodoro ended", "Pomodoro has ended"
             timeLeft = endTime - nowTime.getTime()
             pomodoroBar.value = timeLeft
             pomodoroTimer.text = parseInt(timeLeft / 60000) + 1

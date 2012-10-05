@@ -1,10 +1,10 @@
-goog.provide 'mhlavac.pomodoro.Notification'
+goog.provide 'mhlavac.plasmoid.Notification'
 
 ###
 @param string summary
 @param string body
 ###
-mhlavac.pomodoro.Notification = (summary, body) ->
+mhlavac.plasmoid.Notification = (summary, body) ->
     print "Sending notification: #{summary}\n#{body}"
     engine = dataEngine("notifications")
     service = engine.serviceForSource("notification")
