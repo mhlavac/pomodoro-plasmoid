@@ -1,14 +1,18 @@
 goog.provide 'mhlavac.pomodoro'
 goog.require 'mhlavac.pomodoro.Notification'
-goog.require 'mhlavac.plasmoid.Configuration'
+goog.require 'mhlavac.pomodoro.Configuration'
 
-configuration = new mhlavac.plasmoid.Configuration(plasmoid)
+configuration = new mhlavac.pomodoro.Configuration(plasmoid)
 config = configuration.load()
+config.work_length = 1000
+config.short_break_length = 2000
+config.long_break_length = 3000
 
 layout = new LinearLayout(plasmoid)
 pomodoroTimer = new Label()
 
 button = new PushButton()
+button.styleSheet = "background-color: transparent"
 
 pomodoroBar = new Meter()
 pomodoroBar.meterType = "BarMeterHorizontal"
@@ -17,57 +21,50 @@ layout.addItem(button)
 layout.addItem pomodoroBar
 layout.addItem pomodoroTimer
 
-timer = new QTimer()
-timer.interval = 300
-
-pause = false
+timer = null
+started = true
+pomodoro = true
+stoppedPomodoros = 0
 totalPomodoros = 0
 
-startPomodoro = () ->
-    startTimerFor @config.work_length
-
-startShortBreak = () ->
-    startTimerFor @config.short_break_length
-
-startLongBreak = () ->
-    startTimerFor @config.long_break_length
-
-startTimerFor = (minutes) ->
-    button.text = "Stop"
-    button.image = plasmoid.file("images", "stop.png")
-    button.clicked.connect stopTimer
-    pomodoroBar.maximum = minutes
-    start = (new Date()).getTime() + pomodoroBar.maximum
-    timer.timeout.connect =>
-        nowTime = new Date(start - (new Date()).getTime())
-        if nowTime.getTime() <= 0
-            if (pause == true)
-                button.text = "Start"
-                pause = false
-                stopTimer () ->
-                    startTimerFor config.work_length
-            else
-                pause = true
-                if ((totalPomodoros + 1) % 4 == 0)
-                    button.text = "Take long break"
-                    stopTimer () ->
-                        startTimerFor config.long_break_length
-                else
-                    button.text = "Take break"
-                    stopTimer () ->
-                        startTimerFor config.short_break_length
-        pomodoroTimer.text = nowTime.getMinutes() + 1
-        pomodoroBar.value = nowTime.getTime()
-        print pomodoroBar.value
-    timer.start()
-
-button.text = "Start"
-stopTimer = (callback) ->
-    button.image = plasmoid.file("images", "pomodoro.png")
-    button.clicked.connect startPomodoro
+pomodoroTimer.text = ""
+button.clicked.connect =>
     pomodoroBar.value = 0
-    pomodoroTimer.text = ""
-    timer.stop()
-    totalPomodoros++
+    if @timer
+        @timer.stop()
+    if @started
+        @started = false
+        stoppedPomodoros++
+        image = if @pomodoro then "pomodoro.png" else "wait.png"
+        button.image = plasmoid.file("images", image)
+    else
+        @started = true
+        @timer = new QTimer()
+        button.image = plasmoid.file("images", "stop.png")
+        if @pomodoro
+            print "pomodoro started"
+            length = @config.work_length
+        else
+            if (@totalPomodoros) % 4 == 0
+                length = @config.long_break_length
+                print "long break started"
+            else
+                length = @config.short_break_length
+                print "short break started"
 
-stopTimer => startTimerFor 1
+        @pomodoroBar.maximum = length;
+        endTime = (new Date()).getTime() + length
+        @timer.timeout.connect =>
+            nowTime = (new Date())
+            if nowTime.getTime() >= endTime
+                if @pomodoro
+                    @totalPomodoros++
+                @pomodoro = !@pomodoro
+                @button.clicked()
+                mhlavac.pomodoro.Notification "pomodoro ended", "Pomodoro has ended"
+            timeLeft = endTime - nowTime.getTime()
+            pomodoroBar.value = timeLeft
+            pomodoroTimer.text = parseInt(timeLeft / 60000) + 1
+            print "time left: " + timeLeft / 1000 + "s"
+        @timer.start 300
+button.clicked()

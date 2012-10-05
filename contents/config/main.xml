@@ -7,7 +7,7 @@
     <group name="General">
         <entry name="work_length" type="Int">
             <whatsthis>Work length</whatsthis>
-            <default>25</default>
+            <default>1</default>
         </entry>
         <entry name="short_break" type="Int">
             <whatsthis>Short break length</whatsthis>

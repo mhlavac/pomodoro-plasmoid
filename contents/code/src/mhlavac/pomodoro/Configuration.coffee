@@ -1,19 +1,8 @@
 goog.provide 'mhlavac.pomodoro.Configuration'
 
-class mhlavac.pomodoro.Configuration
+goog.require 'mhlavac.plasmoid.Configuration'
 
-    ###*
-        @type {plasmoid}
-        @protected
-    ###
-    plasmoid: null
-
-    ###*
-        @param {plasmoid} plasmoid
-        @constructor
-    ###
-    constructor: (@plasmoid) ->
-
+class mhlavac.pomodoro.Configuration extends mhlavac.plasmoid.Configuration
     load: () ->
         minute = 60000;
 

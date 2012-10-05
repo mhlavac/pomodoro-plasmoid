@@ -13,5 +13,12 @@ class mhlavac.plasmoid.Configuration
         @constructor
     ###
     constructor: (@plasmoid) ->
+        print "pomodoro test"
+        return {
+            "load": => @load()
+        }
 
+    ###*
+        @return Array
+    ###
     load: () ->
